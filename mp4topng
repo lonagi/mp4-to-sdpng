@@ -1,9 +1,26 @@
+import sys
+import os
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
+# Get the video file name from the command line argument
+video_file = sys.argv[1]
+
+# Get the starting time and interval time from the command-line arguments
+start_time = float(sys.argv[2]) if len(sys.argv) > 2 else 0
+interval_time = float(sys.argv[3]) if len(sys.argv) > 3 else 0
+
+# Create the "frames" directory if it doesn't exist
+if not os.path.exists("frames"):
+    os.makedirs("frames")
+
 # Open the video file
-clip = VideoFileClip("1.mp4")
+clip = VideoFileClip(video_file)
 
 # Iterate through frames and save them as images
-for i, frame in enumerate(clip.iter_frames()):
-    clip.save_frame("frames/frame%d.png" % i, t=i/clip.fps)
+frames = int(clip.fps * interval_time) if interval_time > 0 else int(clip.fps * clip.duration)
+for i in range(0, frames):
+    clip.save_frame("frames/frame%d.png" % i, t=start_time + (i / clip.fps))
+    print(f"Processing frame {i+1}/{frames}", end="\r")
+
+print(f"Frames of {video_file} are extracted successfully!")
 
