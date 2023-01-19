@@ -2,7 +2,7 @@ import requests
 import base64
 import os, glob
 
-IMG_FOLDER = "1"
+IMG_FOLDER = input("folder name")
 
 headers = {
     'Accept': '*/*',
@@ -110,12 +110,12 @@ def gen(img, **kwargs):
     }
     response = requests.post('http://localhost:7860/run/predict/', headers=headers, json=json_data, verify=False)
 
-prompt="best quality, masterpiece, laboratories environment, cyberpunk, dark scary"
+prompt="best quality, masterpiece, laboratories environment, [cyberpunk], (dark scary), [mines environment]"
 nprompt = "noise, top right corner, something in bottom right corner, center bottom hud, (hud), text, minimap, first person hand, lowres, error, people, humans, bodies, digits, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name"
 
 i=0
 file_paths = glob.glob(os.path.join(IMG_FOLDER, "*.png"))
-sorted_file_paths = sorted(file_paths)
+sorted_file_paths = sorted(file_paths, key=lambda x: int(x.split("frame")[1].split(".")[0].zfill(3)))
 for file_path in sorted_file_paths:
     i+=1
     if(i%3!=0):
@@ -125,3 +125,5 @@ for file_path in sorted_file_paths:
         img_bytes = image_file.read()
         encoded_string = f"data:image/png;base64,{base64.b64encode(img_bytes).decode()}"
         gen(encoded_string, index=129, steps=40, cfg=12, denoise=0.8, height=720, width=1280, seed=-1, prompt=prompt, nprompt=nprompt)
+
+
