@@ -2,8 +2,7 @@ import requests
 import base64
 import os, glob
 
-IMG_FOLDER = input("Folder name")
-image_extensions = ["jpg", "jpeg", "png"]
+IMG_FOLDER = "1"
 
 headers = {
     'Accept': '*/*',
@@ -115,13 +114,14 @@ prompt="best quality, masterpiece, laboratories environment, cyberpunk, dark sca
 nprompt = "noise, top right corner, something in bottom right corner, center bottom hud, (hud), text, minimap, first person hand, lowres, error, people, humans, bodies, digits, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, artist name"
 
 i=0
-for extension in image_extensions:
-    for file_path in glob.glob(os.path.join(IMG_FOLDER, f"*.{extension}")):
-        i+=1
-        if(i%3!=0):
-            continue
+file_paths = glob.glob(os.path.join(IMG_FOLDER, "*.png"))
+sorted_file_paths = sorted(file_paths)
+for file_path in sorted_file_paths:
+    i+=1
+    if(i%3!=0):
+        continue
 
-        with open(file_path, "rb") as image_file:
-            img_bytes = image_file.read()
-            encoded_string = f"data:image/{extension};base64,{base64.b64encode(img_bytes).decode()}"
-            gen(encoded_string, index=129, steps=40, cfg=12, denoise=0.8, height=720, width=1280, seed=-1, prompt=prompt, nprompt=nprompt)
+    with open(file_path, "rb") as image_file:
+        img_bytes = image_file.read()
+        encoded_string = f"data:image/png;base64,{base64.b64encode(img_bytes).decode()}"
+        gen(encoded_string, index=129, steps=40, cfg=12, denoise=0.8, height=720, width=1280, seed=-1, prompt=prompt, nprompt=nprompt)
