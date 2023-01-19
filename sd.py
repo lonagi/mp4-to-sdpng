@@ -124,6 +124,6 @@ for file_path in sorted_file_paths:
     with open(file_path, "rb") as image_file:
         img_bytes = image_file.read()
         encoded_string = f"data:image/png;base64,{base64.b64encode(img_bytes).decode()}"
-        gen(encoded_string, index=129, steps=40, cfg=12, denoise=0.8, height=720, width=1280, seed=-1, prompt=prompt, nprompt=nprompt)
+        gen(encoded_string, index=129, steps=40, cfg=11, denoise=0.6, height=720, width=1280, seed=-1, prompt=prompt, nprompt=nprompt)
 
 
