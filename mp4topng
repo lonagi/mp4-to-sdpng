@@ -1,0 +1,9 @@
+from moviepy.video.io.VideoFileClip import VideoFileClip
+
+# Open the video file
+clip = VideoFileClip("1.mp4")
+
+# Iterate through frames and save them as images
+for i, frame in enumerate(clip.iter_frames()):
+    clip.save_frame("frames/frame%d.png" % i, t=i/clip.fps)
+
