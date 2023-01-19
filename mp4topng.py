@@ -16,11 +16,26 @@ if not os.path.exists("frames"):
 # Open the video file
 clip = VideoFileClip(video_file)
 
+# Get the number of frames that have been processed so far
+num_frames_processed = 0
+if os.path.exists("frames/progress.txt"):
+    with open("frames/progress.txt", "r") as f:
+        video_file_name = f.readline().strip()
+        if video_file_name == video_file:
+            num_frames_processed = int(f.readline())
+        else:
+            os.remove("frames/progress.txt")
+
 # Iterate through frames and save them as images
 frames = int(clip.fps * interval_time) if interval_time > 0 else int(clip.fps * clip.duration)
-for i in range(0, frames):
+for i in range(num_frames_processed, frames):
     clip.save_frame("frames/frame%d.png" % i, t=start_time + (i / clip.fps))
     print(f"Processing frame {i+1}/{frames}", end="\r")
+    with open("frames/progress.txt", "w") as f:
+        f.write(f"{video_file}\n{i+1}")
 
 print(f"Frames of {video_file} are extracted successfully!")
+
+# Clean the progress.txt file
+os.remove("frames/progress.txt")
 
