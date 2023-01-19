@@ -1,8 +1,8 @@
 import requests
 import base64
-import os, glob
+import os, glob, re
 
-IMG_FOLDER = input("folder name")
+IMG_FOLDER = input("folder name: \n")
 
 headers = {
     'Accept': '*/*',
@@ -115,10 +115,10 @@ nprompt = "noise, top right corner, something in bottom right corner, center bot
 
 i=0
 file_paths = glob.glob(os.path.join(IMG_FOLDER, "*.png"))
-sorted_file_paths = sorted(file_paths, key=lambda x: int(x.split("frame")[1].split(".")[0].zfill(3)))
+sorted_file_paths = sorted(file_paths, key=lambda x: int(re.findall(r"\d+", x)[0]))
 for file_path in sorted_file_paths:
     i+=1
-    if(i%3!=0):
+    if(len(sorted_file_paths) > 100 and i%3!=0):
         continue
 
     with open(file_path, "rb") as image_file:
